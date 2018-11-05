@@ -81,12 +81,12 @@ export function Angdux(store:IStore) : ClassDecorator {
             const original = constructor.prototype[hook];
             switch(hook) {
                 case "ngOnInit":
-                constructor.prototype['ngOnInit'] = function (...args:any) {
+                constructor.prototype['ngOnInit'] = function (...args:any[]) {
                     let scope = this;
                     store.properties.keys().forEach(key  => {
                         store.properties.item(key)
                             .asObservable()
-                            .subscribe(next => {
+                            .subscribe((next:any) => {
                                 scope[key] = next;
                             });
                     })
@@ -97,13 +97,13 @@ export function Angdux(store:IStore) : ClassDecorator {
                 }
                 break;
                 case "ngOnChanges":
-                constructor.prototype['ngOnChanges'] = function (...args:any) {
+                constructor.prototype['ngOnChanges'] = function (...args:any[]) {
                     let scope = this;
                     original && original.apply(scope, args);
                 }
                 break;
                 case "ngOnDestroy":
-                constructor.prototype['ngOnDestroy'] = function (...args:any) {
+                constructor.prototype['ngOnDestroy'] = function (...args:any[]) {
                     let scope = this;
                     store.properties.values()
                         .forEach(p => p.next(null))
