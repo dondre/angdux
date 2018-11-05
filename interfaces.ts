@@ -1,5 +1,5 @@
 export interface IDictionary<T> {
-    add(key: string, value: T);
+    add(key: string, value: T): void;
     containsKey(key: string): boolean;
     count(): number;
     item(key: string): T;

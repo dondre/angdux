@@ -18,7 +18,7 @@ const loadActions = (actions: any) => {
 }
 
 const setState = (properties: Dictionary<BehaviorSubject<any>>)  => {
-    return (state) => {
+    return (state:any) => {
         if(!state) return;
         Object.keys(state).forEach(key => {
             const prop = properties.item(key);
@@ -30,7 +30,7 @@ const setState = (properties: Dictionary<BehaviorSubject<any>>)  => {
 }
 
 const getState = (props: Dictionary<BehaviorSubject<any>>) => {
-    let state = {};
+    let state:any = {};
     props.keys().forEach(key => {
         if(props.item(key))
             state[key] = props.item(key).value;
@@ -43,8 +43,8 @@ export interface IStore{
     actions: Dictionary<any>;
 }
 
-export const merge = (state, message) => {
-    let merge = {};
+export const merge = (state:any, message:any) => {
+    let merge:any = {};
     Object.keys(state).forEach(key => {
         merge[key] = state[key];
     });
@@ -55,7 +55,7 @@ export const merge = (state, message) => {
     return merge;
 }
 
-export const createStore =(initialState, actions) : IStore => {
+export const createStore =(initialState:any, actions:any) : IStore => {
     let properties = loadProps(initialState);
     actions = loadActions(actions);
 
@@ -65,8 +65,8 @@ export const createStore =(initialState, actions) : IStore => {
     };
 }
 
-export const dispatcher = (props, reducer) => {
-    return (message) =>  {
+export const dispatcher = (props:any, reducer:any) => {
+    return (message:any) =>  {
         const currentState = getState(props);
         const state = reducer(currentState, message);
         setState(props)(state);
@@ -81,7 +81,7 @@ export function Angdux(store:IStore) : ClassDecorator {
             const original = constructor.prototype[hook];
             switch(hook) {
                 case "ngOnInit":
-                constructor.prototype['ngOnInit'] = function (...args) {
+                constructor.prototype['ngOnInit'] = function (...args:any) {
                     let scope = this;
                     store.properties.keys().forEach(key  => {
                         store.properties.item(key)
@@ -97,13 +97,13 @@ export function Angdux(store:IStore) : ClassDecorator {
                 }
                 break;
                 case "ngOnChanges":
-                constructor.prototype['ngOnChanges'] = function (...args) {
+                constructor.prototype['ngOnChanges'] = function (...args:any) {
                     let scope = this;
                     original && original.apply(scope, args);
                 }
                 break;
                 case "ngOnDestroy":
-                constructor.prototype['ngOnDestroy'] = function (...args) {
+                constructor.prototype['ngOnDestroy'] = function (...args:any) {
                     let scope = this;
                     store.properties.values()
                         .forEach(p => p.next(null))
